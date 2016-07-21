@@ -30,9 +30,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user','UserController@index');
 
 });
-Route::get('route', function(){
+Route::get('/new-page', function(){
     // resources/views
-    return view('test');
+    return view('new-page');
 });
 
 /* Route Structure

@@ -5,78 +5,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Dashcar</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
+    <link href='https://fonts.googleapis.com/css?family=Hind:400,300,700|Roboto:400,300,700|Roboto+Condensed:400,300,700' rel='stylesheet' type='text/css'>
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/summernote.css">
+    <link rel="stylesheet" href="/css/style.css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
-
-    <style>
-        body {
-            font-family: 'Lato';
-        }
-
-        .fa-btn {
-            margin-right: 6px;
-        }
-    </style>
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top">
-        <div class="container">
-            <div class="navbar-header">
-
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
-                <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Laravel
-                </a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                <!-- Left Side Of Navbar -->
-                <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
+    <header class="bg-primary">
+        <span class="fa fa-bars menu-toggler"></span>
+        <div class="logo">Dashcar</div>
+        <ul class="user-menu">
+            <li class="notifications"><span class="badge">4</span><span class="fa fa-bell"></span></li>
+            <li class="user"><img src="images/kasper.png"> Kasper Legarth <span class="fa fa-angle-down"></span>
+                <ul class="user-submenu">
+                    <li><a href="/user">Min konto <span class="fa fa-user"></span></a></li>
+                    <li><a href="#">Indstillinger <span class="fa fa-cog"></span></a></li>
+                    <li><a href="#">Ændre kode <span class="fa fa-lock"></span></a></li>
+                    <li><a href="#"><span class="fa fa-power-off"></span> Log ud</a></li>
                 </ul>
-
-                <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
-                    @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                            </ul>
-                        </li>
-                    @endif
-                </ul>
-            </div>
-        </div>
+            </li>
+        </ul>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/"><span class="fa fa-tachometer"></span>Kontrolpanel</a></li>
+            <li class="section"><span class="fa fa-desktop"></span>Hjemmeside</li>
+            <li><a href="/new-page">Ny side</a></li>
+            <li><a href="#">Side oversigt</a></li>
+            <li><a href="#">Udseende</a></li>
+            <li><a href="#">Indstillinger</a></li>
+            <li class="section"><span class="fa fa-car"></span>Biler</li>
+            <li><a href="#">Bil database</a></li>
+            <li><a href="#">Opret ny bil</a></li>
+            <li><a href="#">Henvendelser</a></li>
+            <li class="section"><span class="fa fa-building"></span>Virksomhed</li>
+            <li><a href="#">Kontakt information</a></li>
+            <li><a href="#">Ansatte</a></li>
+        </ul>
     </nav>
-
-    @yield('content')
-
+    <main>
+        @yield('content')
+    </main>
+    <footer class="text-right">
+        <span class="logo">Dashcar</span> v 0.0.1
+    </footer>
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="/js/summernote.min.js"></script>
+    <script src="/js/lang/summernote-da-DK.js"></script>
+    <script src="/js/general.js"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
 </html>
