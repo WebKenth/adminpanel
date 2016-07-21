@@ -1,3 +1,6 @@
+.idea
+.vagrant
+Vagrantfile
 /vendor
 /node_modules
 /public/storage
