@@ -23,12 +23,12 @@
         <div class="logo">Dashcar</div>
         <ul class="user-menu">
             <li class="notifications"><span class="badge">4</span><span class="fa fa-bell"></span></li>
-            <li class="user"><img src="images/kasper.png"> Kasper Legarth <span class="fa fa-angle-down"></span>
+            <li class="user"><img src="images/kasper.png"> {{ auth()->user()->name }} <span class="fa fa-angle-down"></span>
                 <ul class="user-submenu">
                     <li><a href="/user">Min konto <span class="fa fa-user"></span></a></li>
-                    <li><a href="#">Indstillinger <span class="fa fa-cog"></span></a></li>
-                    <li><a href="#">Ændre kode <span class="fa fa-lock"></span></a></li>
-                    <li><a href="#"><span class="fa fa-power-off"></span> Log ud</a></li>
+                    <li><a href="/user/settings">Indstillinger <span class="fa fa-cog"></span></a></li>
+                    <li><a href="/user/password">Ændre kode <span class="fa fa-lock"></span></a></li>
+                    <li><a href="/logout"><span class="fa fa-power-off"></span> Log ud</a></li>
                 </ul>
             </li>
         </ul>
@@ -41,6 +41,7 @@
             <li><a href="#">Side oversigt</a></li>
             <li><a href="#">Udseende</a></li>
             <li><a href="#">Indstillinger</a></li>
+            <li><a href="/files">Filer</a></li>
             <li class="section"><span class="fa fa-car"></span>Biler</li>
             <li><a href="#">Bil database</a></li>
             <li><a href="#">Opret ny bil</a></li>

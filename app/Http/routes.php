@@ -18,45 +18,24 @@ Route::group(['middleware' => 'auth'], function () {
         return view('welcome');
     });
 
-    Route::get('/customers','CustomerController@index');
-    Route::resource('customer','CustomerController');
-    Route::get('/customer/{id}/stats','CustomerController@stats');
-
-    Route::get('/coworkers','CoWorkerController@index');
-    Route::resource('coworker','CoWorkerController');
-    
     Route::get('/settings','SettingsController@index');
 
     Route::get('/user','UserController@index');
 
+//    Route::get('/files','FileController@index');
+//    Route::post('/file','FileController@store');
+//    Route::post('/folder','FolderController@store');
+//    Route::delete('/file/{file}','FileController@delete');
+//    Route::delete('/folder/{folder}','FolderController@delete');
+
+    // files
+    /*
+    post: /folder -> store()
+    get: /folder/{id} -> fetch(id)
+     */
 });
 Route::get('/new-page', function(){
     // resources/views
     return view('new-page');
 });
 
-/* Route Structure
-
-    /
-        -> Basic Dashboard Overview
-        -> Company Information / Bulletin board
-    /customers
-        -> Overview of businesses
-        -> Ability to send notifications / important messages
-    /customer/{id}/stats
-        -> Customer specific stats
-    /coworkers
-        -> List of workers
-        -> Add/Remove
-    /coworker/{id}
-        -> Worker Information
-    /settings
-        -> Site Settings
-        -> User Settings
-    /user
-        -> User Profile
-
-/page
-    -> Overview of pages
-/page/1 = page #1
-*/
