@@ -38,6 +38,14 @@ class AdminTableSeeder extends Seeder
 
         $user = new User;
         $user->id       = 2;
+        $user->name     = 'Morten Gregersen';
+        $user->email    = 'mooorten@gmail.dk';
+        $user->password = bcrypt('password');
+        $user->save();
+        $user->addRole($role);
+
+        $user = new User;
+        $user->id       = 3;
         $user->name     = 'Kristoffer Kjær Nielsen';
         $user->email    = 'kjaer@weboholics.dk';
         $user->password = bcrypt('password');
@@ -45,7 +53,7 @@ class AdminTableSeeder extends Seeder
         $user->addRole($role);
 
         $user = new User;
-        $user->id       = 3;
+        $user->id       = 4;
         $user->name     = 'Kasper Legarth';
         $user->email    = 'legarth@weboholics.dk';
         $user->password = bcrypt('password');
