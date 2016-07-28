@@ -1,0 +1,372 @@
+<template>
+<div id="filebrowser" class="filebrowser">
+    <div class="filebrowser--controls">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-1">
+                        <button class="btn btn-info" @click="openLastFolder(last_folder_id)">Tilbage</button>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Mappe Navn" v-model="folder_name">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit" @click="createFolder">Opret Mappe</button>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button
+                            class="btn btn-warning"
+                            @click="renameItem"
+                            :disabled="!renameable"
+                        >
+                            Omdøb
+                        </button>
+                    </div>
+                    <div class="col-md-1">
+                        <button
+                            class="btn btn-danger"
+                            @click="deleteSelectedFiles"
+                            :disabled="!deleteable"
+                        >Slet</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ol class="breadcrumb">/
+        <li v-for="path in path"></li>
+    </ol>
+    <div class="filebrowser--body">
+        <ul class="filebrowser--list">
+            <li
+                class="filebrowser--item filebrowser--folder"
+                v-for="folder in folders"
+                v-on:click="selectItem(folder,$event)"
+                v-on:dblclick="openFolder(folder.id)"
+                v-bind:class="{ 'filebrowser--selected-item' : isSelected(folder) }"
+            >
+                {{ folder.name }}
+            </li>
+            <li
+                class="filebrowser--item"
+                v-for="file in files"
+                v-on:click="selectItem(file,$event)"
+                v-bind:class="{ 'filebrowser--selected-item' : isSelected(file) }"
+            >
+                {{ file.name }}
+            </li>
+            <li
+                class="filebrowser--no-items"
+                v-if="emptyDirectory"
+            >
+                Tom Mappe
+            </li>
+        </ul>
+        <div class="filebrowser--dropzone">
+            <form action="/api/filebrowser/file" id="dropzone" class="dropzone">
+                <input type="hidden" name="_token" value="{{ csrf_token }}">
+                <input type="hidden" name="folder_id" value="{{ current_folder_id }}">
+                <div class="fallback">
+                    <input name="file" type="file" multiple />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</template>
+<style>
+.filebrowser--pathfinder{
+    margin: -15px 0;
+}
+.filebrowser--list {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    padding: 0;
+    background-color: whitesmoke;
+    border-radius: 3px;
+}
+.dropzone, .panel{
+    background-color: whitesmoke;
+}
+.dropzone{
+    border: 1px solid whitesmoke;
+    border-radius: 2px;
+    border-bottom: 2px solid rgb(73, 77, 77);
+}
+.filebrowser--item {
+    display: inline-block;
+    border: 2px solid #dddddd;
+    padding: 5px;
+    margin: 10px;
+    width: calc(100% * (1 / 4) - 20px);
+    height: 100px;
+}
+.filebrowser--folder{
+    border: 2px solid black;
+    cursor: pointer;
+}
+.filebrowser--selected-item{
+    border: 5px solid white;
+}
+.filebrowser--no-items {
+    height: auto;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    margin: 50px 0;
+    font-size: 25px;
+}
+</style>
+<script>
+export default{
+    props:{
+        csrf_token:{}
+    },
+    data(){
+        return{
+            files: {},
+            folders: {},
+            folder_name: '',
+            breadcrumbs: [0],
+            last_folder_id: 0,
+            selected_items: [],
+            current_folder_id: 0
+        }
+    },
+    computed: {
+        deleteable: function(){
+            return !(this.selected_items.length == 0);
+        },
+        renameable: function(){
+            return !(this.selected_items.length == 0 || this.selected_items.length >= 2);
+        },
+        emptyDirectory: function(){
+            return !(this.folders.length != 0 || this.files.length != 0);
+        }
+    },
+    methods: {
+        isSelected: function(object)
+        {
+            return this.selected_items.indexOf(object) != -1;
+        },
+        selectItem: function(object, event)
+        {
+            if(event.ctrlKey || event.metaKey)
+            {
+                if(!this.isSelected(object))
+                {
+                    var array = this.selected_items;
+                    array.push(object);
+                    console.log(array);
+                    this.selected_items = [0];
+                    this.selected_items = array;
+                }
+            }else
+            {
+                this.selected_items = [ object ];
+            }
+        },
+        selectFolder: function(id)
+        {
+            if(event.ctrlKey || event.metaKey)
+            {
+                if(!this.selected_folders.indexOf(id))
+                {
+                    var array = this.selected_folders;
+                    array.push(id);
+                    this.selected_folders = [0];
+                    this.selected_folders = array;
+                }
+            }else
+            {
+                this.selected_folders = [ id ];
+            }
+        },
+        openFolder: function(parent_id)
+        {
+            this.nextBreadcrumb(parent_id);
+            this.refresh(parent_id);
+        },
+        refresh:function(folder_id)
+        {
+            this.last_folder_id = this.breadcrumbs[this.breadcrumbs.length - 2];
+            this.current_folder_id = folder_id;
+            this.selected_items = [];
+            this.getFolders(folder_id);
+            this.getFiles(folder_id);
+        },
+        openLastFolder: function(parent_id)
+        {
+            if(this.breadcrumbs.length != 1)
+            {
+                this.prevBreadcrumb(parent_id);
+                this.refresh(parent_id);
+            }
+        },
+        getFolders: function (parent_id)
+        {
+            this.$http.get('/api/filebrowser/folders/'+parent_id).then(function(response)
+            {
+                folders = response.body;
+                this.$set('current_folder_id', parent_id);
+                return this.$set('folders', JSON.parse(folders));
+            }, function(response) {
+                console.log(response);
+            });
+        },
+        getFiles: function (folder_id)
+        {
+            this.$http.get('/api/filebrowser/files/'+folder_id).then( function(response)
+            {
+                files = response.body;
+                this.$set('current_folder_id', folder_id);
+                return this.$set('files', JSON.parse(files));
+            }, function (response){
+                console.log(response);
+            });
+        },
+        createFolder: function ()
+        {
+            if( this.folder_name != '' )
+            {
+                data = {
+                    _token : this.csrf_token,
+                    folder_name : this.folder_name,
+                    folder_id : this.current_folder_id
+                };
+                this.$http
+                    .post('/api/filebrowser/folder/', data)
+                    .then(function(response)
+                    {
+                        swal({
+                            title: "Success! \n\""+this.folder_name+"\"\n Mappen er Oprettet",
+                            timer: 1500,
+                            type: 'success',
+                            showConfirmButton: false
+                        });
+                        this.folder_name = '';
+                        this.refresh(this.current_folder_id);
+                    },
+                    function (response) {
+                        swal({
+                            title: "Hovsa \n \""+this.folder_name+"\" \n findes allerede!",
+                            type: 'error',
+                            confirmButtonText: 'Det fikser jeg!',
+                            showConfirmButton: true
+                        });
+                    });
+            }else
+            {
+                swal({
+                    title: "Hovsa! \n Du skal huske at give mappen et navn",
+                    type: 'error',
+                    confirmButtonText: 'Det fisker jeg!',
+                    showConfirmButton: true
+                });
+            }
+        },
+        renameItem: function()
+        {
+            var me = this;
+            swal({
+                title: "Omdøbning",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                inputValue: me.selected_items[0].name
+            }, function(inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "")
+                {
+                    swal.showInputError("Du skal skrive noget!");
+                    return false
+                }
+                data = {
+                    _method : 'patch',
+                    _token : me.csrf_token,
+                    item : me.selected_items,
+                    new_name: inputValue
+                };
+                me.$http
+                    .post('/api/filebrowser/rename/', data)
+                    .then( function(response)
+                    {
+                        me.refresh(me.current_folder_id);
+                        swal("Omdøbt!", "Din fil er blevet Omdøbt!", "success");
+                    }, function (response){
+                        swal("Oops", "Der gik noget Galt", "error");
+                    });
+            });
+        },
+        deleteSelectedFiles: function()
+        {
+            var me = this;
+            swal({
+                title: "Er du sikker?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Ja, Slet det!",
+                cancelButtonText: "Nej, Jeg har ombestemt mig!",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            },
+            function(isConfirm){
+                if (isConfirm)
+                {
+                    data = {
+                        _method : 'delete',
+                        _token : me.csrf_token,
+                        items : me.selected_items
+                    };
+                    me.$http
+                        .post('/api/filebrowser/deleteBundle/', data)
+                        .then( function(response)
+                        {
+                            me.refresh(me.current_folder_id);
+                            swal("Slettet!", "Dine filer er blevet slettet!", "success");
+                        }, function (response){
+                            swal("Oops", "Der gik noget Galt", "error");
+                        });
+                }else
+                {
+                    swal("Bare Rolig", "Der er ikke ændret noget :)", "error");
+                }
+            });
+        },
+        nextBreadcrumb: function(id)
+        {
+            this.breadcrumbs.push(id);
+        },
+        prevBreadcrumb: function()
+        {
+            this.breadcrumbs.pop();
+        }
+    },
+    ready(){
+        var me = this;
+        // get folders
+        me.getFolders(0);
+        // get files
+        me.getFiles(0);
+
+        var Dropzone = require("dropzone");
+
+        Dropzone.options.dropzone = {
+            init: function () {
+                this.on("complete", function (file) {
+                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0)
+                    {
+                        this.removeAllFiles();
+                        me.refresh(me.current_folder_id);
+                    }
+                });
+            }
+        };
+    }
+}
+</script>
