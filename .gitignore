@@ -7,3 +7,4 @@ Vagrantfile
 Homestead.yaml
 Homestead.json
 .env
+/public/upload

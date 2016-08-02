@@ -11,6 +11,8 @@
 |
 */
 
+//Auth::loginUsingId(1);
+
 Route::auth();
 Route::group(['middleware' => 'auth'], function () {
 

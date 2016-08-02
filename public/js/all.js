@@ -23953,9 +23953,9 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-35e991a0", module.exports)
+    hotAPI.createRecord("_v-ce30ddf0", module.exports)
   } else {
-    hotAPI.update("_v-35e991a0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-ce30ddf0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"dropzone":1,"vue":14,"vue-hot-reload-api":12,"vueify/lib/insert-css":15}],17:[function(require,module,exports){

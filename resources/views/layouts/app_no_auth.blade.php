@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
     <title>Dashcar</title>
 
     <!-- Fonts -->
@@ -18,7 +19,8 @@
     <link rel="stylesheet" href="/css/app.css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 </head>
-<body id="app-layout">
+<body id="app-layout" class="background--login">
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
