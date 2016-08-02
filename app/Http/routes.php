@@ -23,10 +23,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user','UserController@index');
 
     // FileBrowser
-    Route::get('files','FileController@index');
+    Route::get('files','FileController@files');
+    Route::get('trashcan', 'FileController@trashcan');
+    Route::get('trashcan2', 'FileController@getTrashedItems');
+
     //// GET
     Route::get('api/filebrowser/files/{folder_id?}', 'FileController@getFiles');
     Route::get('api/filebrowser/folders/{parent_id?}', 'FileController@getFolders');
+    Route::get('api/filebrowser/breadcrumbs/{breadcrumbs}' , 'FileController@getBreadcrumbs');
+    Route::get('api/filebrowser/trashcan', 'FileController@getTrashedItems');
     //// POST
     Route::post('api/filebrowser/file','FileController@createFile');
     Route::post('api/filebrowser/folder','FileController@createFolder');

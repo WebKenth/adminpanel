@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Folder;
 use App\File;
+use Illuminate\Support\Facades\Input;
 
 class FileController extends Controller
 {
@@ -15,9 +16,13 @@ class FileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function files()
     {        
-        return view('filebrowser.index');
+        return view('filebrowser.files');
+    }
+    public function trashcan()
+    {
+        return view('filebrowser.trashcan');
     }
 
     public function getFolders($parent_id = null)
@@ -40,6 +45,20 @@ class FileController extends Controller
         return $files;
     }
 
+    public function getBreadcrumbs($breadcrumbs)
+    {
+        $breadcrumbs = explode(',',$breadcrumbs);
+        $path = array();
+        foreach ($breadcrumbs as $breadcrumb)
+        {
+            if($breadcrumb != 0)
+            {
+                $path[] .= Folder::find($breadcrumb)->name;
+            }
+        }
+        return $path;
+    }
+
     public function createFile(Request $request)
     {
         // todo: Validation
@@ -50,14 +69,14 @@ class FileController extends Controller
         if(!$folder)
         {
             $folder_id = null;
-            $folder_path = 'upload/';
+            $folder_path = '/upload';
         } else
         {
             $folder_id = $folder->id;
             $folder_path = $folder->path;
         }
 
-        if($requestFile->move($folder_path, $name))
+        if($requestFile->move(public_path().$folder_path, $name))
         {
             $file = new File();
 
@@ -65,7 +84,7 @@ class FileController extends Controller
             $file->file_name = $name;
             $file->type = $requestFile->getClientMimeType();
             $file->extension = $requestFile->getClientOriginalExtension();
-            $file->path = $folder_path.$name;
+            $file->path = $folder_path.'/'.$name;
             $file->size = $requestFile->getClientSize();
             $file->folder_id = $folder_id;
 
@@ -84,7 +103,7 @@ class FileController extends Controller
         $name = time() . '_' . $request->folder_name;
         $path = ($parent_id)
             ? Folder::find($parent_id)->path.'/'.$name
-            : 'upload/'.$name ;
+            : '/upload/'.$name ;
         if(\Illuminate\Support\Facades\File::makeDirectory(public_path().'/'.$path , 0777, true))
         {
             $folder = new Folder;
@@ -120,7 +139,6 @@ class FileController extends Controller
     public function deleteBundle(Request $request)
     {
         // todo: Validation
-        $deleted_items = array();
         foreach ($request->items as $item)
         {
             if(
@@ -130,27 +148,43 @@ class FileController extends Controller
             ){
                 $file = File::find($item['id']);
                 $file->delete();
-                if($file->trashed())
-                {
+
+                // physical delete
+//                if($file->trashed())
+//                {
 //                    \Illuminate\Support\Facades\File::delete($file_path);
-                    $deleted_items[] .= $file;
-                }
+//                }
             }else{
+
                 $folder = Folder::find($item['id']);
+
                 $folder->delete();
-                if($folder->trashed())
-                {
+
+                // physical delete
+//                if($folder->trashed())
+//                {
 //                    \Illuminate\Support\Facades\File::deleteDirectory($folder_path);
-                    $deleted_items[] .= $folder;
-                }
+//                }
             }
         }
-        return $deleted_items;
     }
 
-    public function listTrash()
+    public function getTrashedItems()
     {
-
+        $items = array();
+        $folders = Folder::onlyTrashed()->get();
+        $folders->load('files','sub_folders');
+        foreach ($folders as $folder) 
+        {
+            $folder->num_of_files = count($folder->files);
+            $items[] = $folder;
+        }
+        $files = File::onlyTrashed()->where('folder_id','=',null)->get();
+        foreach ($files as $file)
+        {
+            $items[] = $file;
+        }
+        return $items;
     }
 
     public function restoreTrashed(Request $request)
@@ -158,6 +192,10 @@ class FileController extends Controller
 
     }
 
+    public function forceDelete(Request $request)
+    {
+
+    }
     /**
      * Show the form for creating a new resource.
      *

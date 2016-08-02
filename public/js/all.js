@@ -23705,7 +23705,7 @@ exports.insert = function (css) {
 
 },{}],16:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.filebrowser--pathfinder{\n    margin: -15px 0;\n}\n.filebrowser--list {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    list-style: none;\n    -ms-flex-wrap: wrap;\n        flex-wrap: wrap;\n    padding: 0;\n    background-color: whitesmoke;\n    border-radius: 3px;\n}\n.dropzone, .panel{\n    background-color: whitesmoke;\n}\n.dropzone{\n    border: 1px solid whitesmoke;\n    border-radius: 2px;\n    border-bottom: 2px solid rgb(73, 77, 77);\n}\n.filebrowser--item {\n    display: inline-block;\n    border: 2px solid #dddddd;\n    padding: 5px;\n    margin: 10px;\n    width: calc(100% * (1 / 4) - 20px);\n    height: 100px;\n}\n.filebrowser--folder{\n    border: 2px solid black;\n    cursor: pointer;\n}\n.filebrowser--selected-item{\n    border: 5px solid white;\n}\n.filebrowser--no-items {\n    height: auto;\n    width: 100%;\n    padding: 10px;\n    text-align: center;\n    margin: 50px 0;\n    font-size: 25px;\n}\n")
+var __vueify_style__ = __vueify_insert__.insert("\n.filebrowser{\n    position: relative;\n}\n.filebrowser--pathfinder{\n    margin: -15px 0;\n}\n.filebrowser--list {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    list-style: none;\n    -ms-flex-wrap: wrap;\n        flex-wrap: wrap;\n    padding: 0;\n    background-color: whitesmoke;\n    border-radius: 3px;\n}\n.dropzone, .panel{\n    background-color: whitesmoke;\n}\n.dropzone{\n    border: 1px solid whitesmoke;\n    border-radius: 2px;\n    border-bottom: 2px solid rgb(73, 77, 77);\n}\n.filebrowser--item {\n    position: relative;\n    display: inline-block;\n    border: 2px solid #dddddd;\n    padding: 5px;\n    margin: 10px;\n    width: calc(100% * (1 / 4) - 20px);\n    height: 150px;\n    overflow: hidden;\n}\n.filebrowser--item img {\n    width: 100%;\n}\n.filebrowser--item p {\n    position: absolute;\n    z-index: 2000;\n    width: 100%;\n    height: 100%;\n    background: rgba(255, 255, 255, 0.5);\n    margin: 0;\n    top: 0;\n    text-align: center;\n    padding-top: 20%;\n    opacity: 1;\n}\n.filebrowser--item p:hover{\n    opacity: 0.2;\n}\n.filebrowser--folder{\n    cursor: pointer;\n    text-align: center;\n}\n.filebrowser--folder i{\n    font-size: 150px;\n    margin-left: 7px;\n}\n.filebrowser--folder p {\n    color: white;\n    font-size: -webkit-xxx-large;\n}\n.filebrowser--selected-item {\n    border: 5px solid #2ecc71;\n}\n.filebrowser--no-items {\n    height: auto;\n    width: 100%;\n    padding: 10px;\n    text-align: center;\n    margin: 50px 0;\n    font-size: 25px;\n}\n.filebrowser--loading{\n    position: absolute;\n    z-index: 9000;\n    width: 100%;\n    height: calc( 100% - 143px);\n    background: rgba(73, 77, 77, 0.6);\n    margin: 142px 0 0 0;\n    border-radius: 2px;\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23717,8 +23717,10 @@ exports.default = {
     },
     data: function data() {
         return {
+            path: [],
             files: {},
             folders: {},
+            loading: false,
             folder_name: '',
             breadcrumbs: [0],
             last_folder_id: 0,
@@ -23775,6 +23777,8 @@ exports.default = {
             this.last_folder_id = this.breadcrumbs[this.breadcrumbs.length - 2];
             this.current_folder_id = folder_id;
             this.selected_items = [];
+
+            this.getPath();
             this.getFolders(folder_id);
             this.getFiles(folder_id);
         },
@@ -23798,6 +23802,20 @@ exports.default = {
                 files = response.body;
                 this.$set('current_folder_id', folder_id);
                 return this.$set('files', JSON.parse(files));
+            }, function (response) {
+                console.log(response);
+            });
+        },
+        getPath: function getPath() {
+            var me = this;
+            this.$http.get('/api/filebrowser/breadcrumbs/' + encodeURIComponent(this.breadcrumbs), {
+                before: function before(request) {
+                    me.loading = true;
+                }
+            }).then(function (response) {
+                path = response.body;
+                me.loading = false;
+                return this.$set('path', JSON.parse(path));
             }, function (response) {
                 console.log(response);
             });
@@ -23902,10 +23920,13 @@ exports.default = {
     },
     ready: function ready() {
         var me = this;
+        // Initialize view ( get folders/files/breadcrumbs )
         // get folders
         me.getFolders(0);
         // get files
         me.getFiles(0);
+        // get breadcrumbs
+        me.getPath();
 
         var Dropzone = require("dropzone");
 
@@ -23922,13 +23943,13 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div id=\"filebrowser\" class=\"filebrowser\">\n    <div class=\"filebrowser--controls\">\n        <div class=\"panel panel-default\">\n            <div class=\"panel-body\">\n                <div class=\"row\">\n                    <div class=\"col-md-1\">\n                        <button class=\"btn btn-info\" @click=\"openLastFolder(last_folder_id)\">Tilbage</button>\n                    </div>\n                    <div class=\"col-md-3\">\n                        <div class=\"input-group\">\n                            <input type=\"text\" class=\"form-control\" placeholder=\"Mappe Navn\" v-model=\"folder_name\">\n                            <span class=\"input-group-btn\">\n                                <button class=\"btn btn-primary\" type=\"submit\" @click=\"createFolder\">Opret Mappe</button>\n                            </span>\n                        </div>\n                    </div>\n                    <div class=\"col-md-1\">\n                        <button class=\"btn btn-warning\" @click=\"renameItem\" :disabled=\"!renameable\">\n                            Omdøb\n                        </button>\n                    </div>\n                    <div class=\"col-md-1\">\n                        <button class=\"btn btn-danger\" @click=\"deleteSelectedFiles\" :disabled=\"!deleteable\">Slet</button>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <ol class=\"breadcrumb\">/\n        <li v-for=\"path in path\"></li>\n    </ol>\n    <div class=\"filebrowser--body\">\n        <ul class=\"filebrowser--list\">\n            <li class=\"filebrowser--item filebrowser--folder\" v-for=\"folder in folders\" v-on:click=\"selectItem(folder,$event)\" v-on:dblclick=\"openFolder(folder.id)\" v-bind:class=\"{ 'filebrowser--selected-item' : isSelected(folder) }\">\n                {{ folder.name }}\n            </li>\n            <li class=\"filebrowser--item\" v-for=\"file in files\" v-on:click=\"selectItem(file,$event)\" v-bind:class=\"{ 'filebrowser--selected-item' : isSelected(file) }\">\n                {{ file.name }}\n            </li>\n            <li class=\"filebrowser--no-items\" v-if=\"emptyDirectory\">\n                Tom Mappe\n            </li>\n        </ul>\n        <div class=\"filebrowser--dropzone\">\n            <form action=\"/api/filebrowser/file\" id=\"dropzone\" class=\"dropzone\">\n                <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token }}\">\n                <input type=\"hidden\" name=\"folder_id\" value=\"{{ current_folder_id }}\">\n                <div class=\"fallback\">\n                    <input name=\"file\" type=\"file\" multiple=\"\">\n                </div>\n            </form>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div id=\"filebrowser\" class=\"filebrowser\">\n    <img v-show=\"loading\" src=\"/images/ring.svg\" class=\"filebrowser--loading\">\n    <div class=\"filebrowser--controls\">\n        <div class=\"panel panel-default\">\n            <div class=\"panel-body\">\n                <div class=\"row\">\n                    <div class=\"col-md-1\">\n                        <button class=\"btn btn-info\" @click=\"openLastFolder(last_folder_id)\">Tilbage</button>\n                    </div>\n                    <div class=\"col-md-3\">\n                        <div class=\"input-group\">\n                            <input type=\"text\" class=\"form-control\" placeholder=\"Mappe Navn\" v-model=\"folder_name\">\n                            <span class=\"input-group-btn\">\n                                <button class=\"btn btn-primary\" type=\"submit\" @click=\"createFolder\">Opret Mappe</button>\n                            </span>\n                        </div>\n                    </div>\n                    <div class=\"col-md-1\">\n                        <button class=\"btn btn-warning\" @click=\"renameItem\" :disabled=\"!renameable\">\n                            Omdøb\n                        </button>\n                    </div>\n                    <div class=\"col-md-1\">\n                        <button class=\"btn btn-danger\" @click=\"deleteSelectedFiles\" :disabled=\"!deleteable\">Slet</button>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <ol class=\"breadcrumb\">/\n        <li v-for=\"path in path\">{{path}}</li>\n    </ol>\n    <div class=\"filebrowser--body\">\n        <ul class=\"filebrowser--list\">\n            <li class=\"filebrowser--item filebrowser--folder\" v-for=\"folder in folders\" v-on:click=\"selectItem(folder,$event)\" v-on:dblclick=\"openFolder(folder.id)\" v-bind:class=\"{ 'filebrowser--selected-item' : isSelected(folder) }\">\n                <i class=\"fa fa-folder\" aria-hidden=\"true\"></i>\n                <p>{{ folder.name }}</p>\n            </li>\n            <li class=\"filebrowser--item\" v-for=\"file in files\" v-on:click=\"selectItem(file,$event)\" v-bind:class=\"{ 'filebrowser--selected-item' : isSelected(file) }\">\n                <img v-bind:src=\"file.path\">\n                <p>{{ file.name }}</p>\n            </li>\n            <li class=\"filebrowser--no-items\" v-if=\"emptyDirectory\">\n                Tom Mappe\n            </li>\n        </ul>\n        <div class=\"filebrowser--dropzone\">\n            <form action=\"/api/filebrowser/file\" id=\"dropzone\" class=\"dropzone\">\n                <input type=\"hidden\" name=\"_token\" value=\"{{ csrf_token }}\">\n                <input type=\"hidden\" name=\"folder_id\" value=\"{{ current_folder_id }}\">\n                <div class=\"fallback\">\n                    <input name=\"file\" type=\"file\" multiple=\"\">\n                </div>\n            </form>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.filebrowser--pathfinder{\n    margin: -15px 0;\n}\n.filebrowser--list {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    list-style: none;\n    -ms-flex-wrap: wrap;\n        flex-wrap: wrap;\n    padding: 0;\n    background-color: whitesmoke;\n    border-radius: 3px;\n}\n.dropzone, .panel{\n    background-color: whitesmoke;\n}\n.dropzone{\n    border: 1px solid whitesmoke;\n    border-radius: 2px;\n    border-bottom: 2px solid rgb(73, 77, 77);\n}\n.filebrowser--item {\n    display: inline-block;\n    border: 2px solid #dddddd;\n    padding: 5px;\n    margin: 10px;\n    width: calc(100% * (1 / 4) - 20px);\n    height: 100px;\n}\n.filebrowser--folder{\n    border: 2px solid black;\n    cursor: pointer;\n}\n.filebrowser--selected-item{\n    border: 5px solid white;\n}\n.filebrowser--no-items {\n    height: auto;\n    width: 100%;\n    padding: 10px;\n    text-align: center;\n    margin: 50px 0;\n    font-size: 25px;\n}\n"] = false
+    __vueify_insert__.cache["\n.filebrowser{\n    position: relative;\n}\n.filebrowser--pathfinder{\n    margin: -15px 0;\n}\n.filebrowser--list {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    list-style: none;\n    -ms-flex-wrap: wrap;\n        flex-wrap: wrap;\n    padding: 0;\n    background-color: whitesmoke;\n    border-radius: 3px;\n}\n.dropzone, .panel{\n    background-color: whitesmoke;\n}\n.dropzone{\n    border: 1px solid whitesmoke;\n    border-radius: 2px;\n    border-bottom: 2px solid rgb(73, 77, 77);\n}\n.filebrowser--item {\n    position: relative;\n    display: inline-block;\n    border: 2px solid #dddddd;\n    padding: 5px;\n    margin: 10px;\n    width: calc(100% * (1 / 4) - 20px);\n    height: 150px;\n    overflow: hidden;\n}\n.filebrowser--item img {\n    width: 100%;\n}\n.filebrowser--item p {\n    position: absolute;\n    z-index: 2000;\n    width: 100%;\n    height: 100%;\n    background: rgba(255, 255, 255, 0.5);\n    margin: 0;\n    top: 0;\n    text-align: center;\n    padding-top: 20%;\n    opacity: 1;\n}\n.filebrowser--item p:hover{\n    opacity: 0.2;\n}\n.filebrowser--folder{\n    cursor: pointer;\n    text-align: center;\n}\n.filebrowser--folder i{\n    font-size: 150px;\n    margin-left: 7px;\n}\n.filebrowser--folder p {\n    color: white;\n    font-size: -webkit-xxx-large;\n}\n.filebrowser--selected-item {\n    border: 5px solid #2ecc71;\n}\n.filebrowser--no-items {\n    height: auto;\n    width: 100%;\n    padding: 10px;\n    text-align: center;\n    margin: 50px 0;\n    font-size: 25px;\n}\n.filebrowser--loading{\n    position: absolute;\n    z-index: 9000;\n    width: 100%;\n    height: calc( 100% - 143px);\n    background: rgba(73, 77, 77, 0.6);\n    margin: 142px 0 0 0;\n    border-radius: 2px;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
@@ -23938,11 +23959,63 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"dropzone":1,"vue":14,"vue-hot-reload-api":12,"vueify/lib/insert-css":15}],17:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.filebrowsertrashcan--item h2 {\n    display:inline;\n}\n.filebrowsertrashcan--item-container{\n    margin-bottom: 10px;\n}\n.filebrowsertrashcan--item-image{\n    height: 200px;\n    width: 200px;\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: {
+        csrf_token: {}
+    },
+    data: function data() {
+        return {
+            items: {}
+        };
+    },
+
+    computed: {},
+    methods: {
+        getTrashedItems: function getTrashedItems() {
+            this.$http.get('/api/filebrowser/trashcan/').then(function (response) {
+                return this.$set('items', JSON.parse(response.body));
+            }, function (response) {
+                console.log(response);
+            });
+        }
+    },
+    ready: function ready() {
+        this.getTrashedItems();
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"filebrowsertrashcan\">\n    <ul class=\"filebrowsertrashcan--list list-group\">\n        <li class=\"filebrowsertrashcan--item list-group-item\" v-for=\"item in items\">\n            <div class=\"filebrowsertrashcan--item-container\">\n                <h2 class=\"list-group-item-heading\">\n                    <span v-if=\"item.files\"><i class=\"fa fa-folder\"></i></span>\n                    <span v-else=\"\"><i class=\"fa fa-file\"></i></span>\n                    {{ item.name }}\n                    <span v-if=\"item.files\">( {{ item.num_of_files }} )</span>\n                </h2>\n                <div class=\"pull-right\">\n                    <button class=\"btn btn-danger\">Slet</button>\n                    <button class=\"btn btn-success\">Gendan</button>\n                </div>\n            </div>\n            <ul class=\"list-group\" v-if=\"item.files\">\n                <li class=\"list-group-item\" v-for=\"file in item.files\">\n                    <!--<img class=\"filebrowsertrashcan&#45;&#45;item-image\" v-bind:src=\"file.path\">-->\n                    <p>{{ file.name }}</p>\n                </li>\n            </ul>\n        </li>\n    </ul>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.filebrowsertrashcan--item h2 {\n    display:inline;\n}\n.filebrowsertrashcan--item-container{\n    margin-bottom: 10px;\n}\n.filebrowsertrashcan--item-image{\n    height: 200px;\n    width: 200px;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-55b408e8", module.exports)
+  } else {
+    hotAPI.update("_v-55b408e8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":14,"vue-hot-reload-api":12,"vueify/lib/insert-css":15}],18:[function(require,module,exports){
 'use strict';
 
 var _FileBrowser = require('./components/FileBrowser.vue');
 
 var _FileBrowser2 = _interopRequireDefault(_FileBrowser);
+
+var _FileBrowserTrashcan = require('./components/FileBrowserTrashcan.vue');
+
+var _FileBrowserTrashcan2 = _interopRequireDefault(_FileBrowserTrashcan);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23951,12 +24024,12 @@ Vue.use(require('vue-resource'));
 
 new Vue({
     el: 'body',
-    components: { FileBrowser: _FileBrowser2.default }
+    components: { FileBrowser: _FileBrowser2.default, FileBrowserTrashcan: _FileBrowserTrashcan2.default }
 });
 
 var swal = require('sweetalert');
 
-},{"./components/FileBrowser.vue":16,"sweetalert":11,"vue":14,"vue-resource":13}]},{},[17]);
+},{"./components/FileBrowser.vue":16,"./components/FileBrowserTrashcan.vue":17,"sweetalert":11,"vue":14,"vue-resource":13}]},{},[18]);
 
 //# sourceMappingURL=main.js.map
 

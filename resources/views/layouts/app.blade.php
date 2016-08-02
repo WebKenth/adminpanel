@@ -39,7 +39,7 @@
             <li><a href="#">Indstillinger</a></li>
             <li class="section"><span class="fa fa-folder-open"></span>Upload</li>
             <li><a href="/files">Filer / Billeder</a></li>
-            <li><a href="/files/restore">Gendan Filer</a></li>
+            <li><a href="/trashcan">Skraldespand</a></li>
             <li class="section"><span class="fa fa-car"></span>Biler</li>
             <li><a href="#">Bil database</a></li>
             <li><a href="#">Opret ny bil</a></li>
