@@ -11,6 +11,8 @@
 |
 */
 
+//Auth::loginUsingId(1);
+
 Route::auth();
 Route::group(['middleware' => 'auth'], function () {
 
@@ -22,17 +24,19 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/user','UserController@index');
 
-//    Route::get('/files','FileController@index');
-//    Route::post('/file','FileController@store');
-//    Route::post('/folder','FolderController@store');
-//    Route::delete('/file/{file}','FileController@delete');
-//    Route::delete('/folder/{folder}','FolderController@delete');
+    // FileBrowser
+    Route::get('files','FileController@index');
+    //// GET
+    Route::get('api/filebrowser/files/{folder_id?}', 'FileController@getFiles');
+    Route::get('api/filebrowser/folders/{parent_id?}', 'FileController@getFolders');
+    //// POST
+    Route::post('api/filebrowser/file','FileController@createFile');
+    Route::post('api/filebrowser/folder','FileController@createFolder');
+    ///// PATCH
+    Route::patch('api/filebrowser/rename','FileController@renameItem');
+    ///// DELETE
+    Route::delete('api/filebrowser/deleteBundle','FileController@deleteBundle');
 
-    // files
-    /*
-    post: /folder -> store()
-    get: /folder/{id} -> fetch(id)
-     */
 });
 Route::get('/new-page', function(){
     // resources/views

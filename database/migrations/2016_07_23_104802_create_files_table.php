@@ -15,18 +15,20 @@ class CreateFilesTable extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('file_name');
             $table->string('type');
             $table->string('extension');
             $table->string('path');
             $table->integer('size')->nullable();
-            $table->integer('folder_id')->unsigned();
+            $table->integer('folder_id')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
             
             
             $table->foreign('folder_id')
                   ->references('id')
-                  ->on('folders');
+                  ->on('folders')
+                  ->onDelete('cascade');
         });
     }
 
