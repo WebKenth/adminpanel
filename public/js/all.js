@@ -23953,9 +23953,9 @@ if (module.hot) {(function () {  module.hot.accept()
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-ce30ddf0", module.exports)
+    hotAPI.createRecord("_v-35e991a0", module.exports)
   } else {
-    hotAPI.update("_v-ce30ddf0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-35e991a0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
 },{"dropzone":1,"vue":14,"vue-hot-reload-api":12,"vueify/lib/insert-css":15}],17:[function(require,module,exports){
@@ -24007,7 +24007,45 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":14,"vue-hot-reload-api":12,"vueify/lib/insert-css":15}],18:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n\n")
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: {},
+    data: function data() {
+        return {};
+    },
+
+    computed: {},
+    methods: {},
+    ready: function ready() {}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"row\">\n    <div class=\"col-md-12\">\n        <button class=\"btn btn-default\" @click=\"createPage\">\n            Opret Side\n        </button>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-5\">\n        Page List\n        <ul>\n            <li v-for=\"page in pages\" @click=\"\">\n                <span class=\"pull-left page--id\">{{ page.id }}</span>\n                <div class=\"pull-left page--name\">{{ page.name }}</div>\n                <div class=\"text-grey page--route\">{{ page.route }}</div>\n            </li>\n        </ul>\n    </div>\n    <div class=\"col-md-7\">\n        Page Control\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-5f2bf9e8", module.exports)
+  } else {
+    hotAPI.update("_v-5f2bf9e8", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":14,"vue-hot-reload-api":12,"vueify/lib/insert-css":15}],19:[function(require,module,exports){
 'use strict';
+
+var _Pages = require('./components/Pages.vue');
+
+var _Pages2 = _interopRequireDefault(_Pages);
 
 var _FileBrowser = require('./components/FileBrowser.vue');
 
@@ -24024,12 +24062,12 @@ Vue.use(require('vue-resource'));
 
 new Vue({
     el: 'body',
-    components: { FileBrowser: _FileBrowser2.default, FileBrowserTrashcan: _FileBrowserTrashcan2.default }
+    components: { FileBrowser: _FileBrowser2.default, FileBrowserTrashcan: _FileBrowserTrashcan2.default, Pages: _Pages2.default }
 });
 
 var swal = require('sweetalert');
 
-},{"./components/FileBrowser.vue":16,"./components/FileBrowserTrashcan.vue":17,"sweetalert":11,"vue":14,"vue-resource":13}]},{},[18]);
+},{"./components/FileBrowser.vue":16,"./components/FileBrowserTrashcan.vue":17,"./components/Pages.vue":18,"sweetalert":11,"vue":14,"vue-resource":13}]},{},[19]);
 
 //# sourceMappingURL=main.js.map
 

@@ -33,36 +33,24 @@ class Folder extends Model
 
         static::deleting(function($folder)
         {
-            $folder->files()->delete();
             $folder->delete_sub_folders($folder);
         });
     }
 
-    public function delete_sub_folders($folder,$level = 0)
+    public function delete_sub_folders($folder)
     {
-        echo '::Scanning::';
-        var_dump($folder->name);
         if($folder->sub_folders->first())
         {
             foreach ($folder->sub_folders as $sub_folder)
             {
+                $sub_folder->delete();
                 if($sub_folder->sub_folders->first())
                 {
-                    $level++;
-                    $this->delete_sub_folders($sub_folder, $level);
-                }else{
-                    echo '\n::Folder::';
-                    var_dump($folder->name);
-                    echo '\n::File(s)::';
-                    foreach ($sub_folder->files as $file)
-                    {
-                        var_dump($file->name);
-                        $file->delete();
-                    }
-                    $sub_folder->delete();
+                    $this->delete_sub_folders($sub_folder);
                 }
             }
         }
+        $folder->files()->delete();
     }
 
 //    public function delete_sub_folders($folder_id)
