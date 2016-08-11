@@ -1,35 +1,111 @@
 <template>
     <div class="row">
-        <div class="col-md-12">
-            <button
-                class="btn btn-default"
-                @click="createPage"
-            >
-                Opret Side
-            </button>
+        <div v-bind:class="{ 'col-md-5' : showControlPanel, 'col-md-12' : !showControlPanel}">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <h4 class="pages--title">Page List</h4>
+                    <button
+                        class="btn btn-default pull-right pages--button-create"
+                        @click="createPage"
+                    >
+                        Opret Side
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered pages--table">
+                        <thead>
+                            <tr>
+                                <td>Side Navn</td>
+                                <td>Addresse</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                class="pages--table-row"
+                                v-for="page in pages"
+                                @click="selectPage(page)"
+                            >
+                                <td class="page--name">
+                                    {{ page.name }}
+                                </td>
+                                <td class="pages--route">
+                                    {{ page.route }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-5">
-            Page List
-            <ul>
-                <li
-                    v-for="page in pages"
-                    @click=""
-                >
-                    <span class="pull-left page--id">{{ page.id }}</span>
-                    <div class="pull-left page--name">{{ page.name }}</div>
-                    <div class="text-grey page--route">{{ page.route }}</div>
-                </li>
-            </ul>
-        </div>
-        <div class="col-md-7">
-            Page Control
+        <div
+            class="col-md-7"
+            v-show="showControlPanel"
+        >
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Pages Control Panel
+                </div>
+                <div class="panel-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Navn</label>
+                            <input class="form-control" id="name" name="name" value="{{ selectedPage.name }}" placeholder="Et Navn til refference">
+                        </div>
+                        <div class="form-group">
+                            <label for="route">Route</label>
+                            <input class="form-control" id="route" name="route" value="{{ selectedPage.route }}" placeholder="Route Navn">
+                        </div>
+                        <div class="form-group">
+                            <label for="template">Tema / Skabelon || {{ selectedPage.template_id }}</label>
+                            <select class="form-control" id="template" name="template">
+                                <option
+                                    v-for="template in templates"
+                                    value="{{template.id}}"
+                                    v-bind:selected="template.id == selectedPage.template_id"
+                                >
+                                    {{template.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Indhold</label>
+                            <textarea class="form-control" id="content" name="content">{{ selectedPage.content }}</textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <style>
+.pages--title
+{
+    display: inline-block;
+    margin: 7px 0;
+}
+.pages--button-create {
+    margin-right: -10px;
+    border: 2px solid rgba(65, 65, 65, 0.25);
+}
+.pages--table{
+    background: white;
+}
+.page--button-edit {
+    font-size: 20px;
+    padding: 0 5px;
+}
+.pages--table-row{
 
+}
+.pages--table-row:hover{
+    cursor: pointer;
+}
+.pages--route{
+    padding: 0 15px;
+    color: grey;
+    font-weight: initial;
+}
 </style>
 <script>
 export default
@@ -38,13 +114,68 @@ export default
     },
     data(){
         return{
-            
+            showControlPanel: false,
+            selectedPage: {},
+            pages:
+            [
+                {
+                    id : 1,
+                    name : "Forside",
+                    route : "/",
+                    content : "Willkommen",
+                    template_id : "1"
+                },{
+                    id : 2,
+                    name : "IndholdsSide",
+                    route : "/indhold",
+                    content : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis ea molestias nemo officiis quidem quisquam sequi velit voluptas voluptatum? Adipisci culpa cum dolores iusto molestias odit possimus tempora temporibus totam!",
+                    template_id : "2"
+                },{
+                    id : 3,
+                    name : "Kontakt",
+                    route : "/about",
+                    content : "Vi er ...",
+                    template_id : "3"
+                }
+            ],
+            templates:
+            [
+                {
+                    id : 1,
+                    name: "Teknisk Forvaltning"
+                },{
+                    id : 2,
+                    name: "Den Gule Giraf"
+                },{
+                    id : 3,
+                    name: "Flammen"
+                },{
+                    id : 4,
+                    name: "Café Pingvin"
+                }
+            ]
         }
     },
     computed: {
         
     },
     methods: {
+        selectPage: function(page)
+        {
+            this.selectedPage = page;
+            this.openControlPanel();
+        },
+        openControlPanel : function()
+        {
+            if(!this.showControlPanel)
+            {
+                this.showControlPanel = true;
+            }
+        },
+        createPage: function()
+        {
+            return null;
+        }
         
     },
     ready(){

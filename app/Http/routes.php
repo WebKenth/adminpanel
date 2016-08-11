@@ -20,15 +20,25 @@ Route::group(['middleware' => 'auth'], function () {
         return view('welcome');
     });
 
-    Route::get('/settings','SettingsController@index');
+    // Pages
+    Route::get('pages', 'PageController@index');
+    Route::resource('page', 'PageController');
 
-    Route::get('/user','UserController@index');
+    // Templates
+    Route::resource('template', 'TemplateController');
 
     // FileBrowser
     Route::get('files','FileController@files');
     Route::get('trashcan', 'FileController@trashcan');
     Route::get('trashcan2', 'FileController@getTrashedItems');
 
+    // Settings
+    Route::get('/settings','SettingsController@index');
+
+    // User Settings
+    Route::get('/user','UserController@index');
+
+    // API Routes :: FileBrowser
     //// GET
     Route::get('api/filebrowser/files/{folder_id?}', 'FileController@getFiles');
     Route::get('api/filebrowser/folders/{parent_id?}', 'FileController@getFolders');

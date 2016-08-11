@@ -24008,7 +24008,7 @@ if (module.hot) {(function () {  module.hot.accept()
 })()}
 },{"vue":14,"vue-hot-reload-api":12,"vueify/lib/insert-css":15}],18:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n\n")
+var __vueify_style__ = __vueify_insert__.insert("\n.pages--title\n{\n    display: inline-block;\n    margin: 7px 0;\n}\n.pages--button-create {\n    margin-right: -10px;\n    border: 2px solid rgba(65, 65, 65, 0.25);\n}\n.pages--table{\n    background: white;\n}\n.page--button-edit {\n    font-size: 20px;\n    padding: 0 5px;\n}\n.pages--table-row{\n\n}\n.pages--table-row:hover{\n    cursor: pointer;\n}\n.pages--route{\n    padding: 0 15px;\n    color: grey;\n    font-weight: initial;\n}\n")
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -24017,21 +24017,70 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {
     props: {},
     data: function data() {
-        return {};
+        return {
+            showControlPanel: false,
+            selectedPage: {},
+            pages: [{
+                id: 1,
+                name: "Forside",
+                route: "/",
+                content: "Willkommen",
+                template_id: "1"
+            }, {
+                id: 2,
+                name: "IndholdsSide",
+                route: "/indhold",
+                content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis ea molestias nemo officiis quidem quisquam sequi velit voluptas voluptatum? Adipisci culpa cum dolores iusto molestias odit possimus tempora temporibus totam!",
+                template_id: "2"
+            }, {
+                id: 3,
+                name: "Kontakt",
+                route: "/about",
+                content: "Vi er ...",
+                template_id: "3"
+            }],
+            templates: [{
+                id: 1,
+                name: "Teknisk Forvaltning"
+            }, {
+                id: 2,
+                name: "Den Gule Giraf"
+            }, {
+                id: 3,
+                name: "Flammen"
+            }, {
+                id: 4,
+                name: "Café Pingvin"
+            }]
+        };
     },
 
     computed: {},
-    methods: {},
+    methods: {
+        selectPage: function selectPage(page) {
+            this.selectedPage = page;
+            this.openControlPanel();
+        },
+        openControlPanel: function openControlPanel() {
+            if (!this.showControlPanel) {
+                this.showControlPanel = true;
+            }
+        },
+        createPage: function createPage() {
+            return null;
+        }
+
+    },
     ready: function ready() {}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"row\">\n    <div class=\"col-md-12\">\n        <button class=\"btn btn-default\" @click=\"createPage\">\n            Opret Side\n        </button>\n    </div>\n</div>\n<div class=\"row\">\n    <div class=\"col-md-5\">\n        Page List\n        <ul>\n            <li v-for=\"page in pages\" @click=\"\">\n                <span class=\"pull-left page--id\">{{ page.id }}</span>\n                <div class=\"pull-left page--name\">{{ page.name }}</div>\n                <div class=\"text-grey page--route\">{{ page.route }}</div>\n            </li>\n        </ul>\n    </div>\n    <div class=\"col-md-7\">\n        Page Control\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"row\">\n    <div v-bind:class=\"{ 'col-md-5' : showControlPanel, 'col-md-12' : !showControlPanel}\">\n        <div class=\"panel panel-default\">\n            <!-- Default panel contents -->\n            <div class=\"panel-heading\">\n                <h4 class=\"pages--title\">Page List</h4>\n                <button class=\"btn btn-default pull-right pages--button-create\" @click=\"createPage\">\n                    Opret Side\n                </button>\n            </div>\n            <div class=\"table-responsive\">\n                <table class=\"table table-hover table-bordered pages--table\">\n                    <thead>\n                        <tr>\n                            <td>Side Navn</td>\n                            <td>Addresse</td>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        <tr class=\"pages--table-row\" v-for=\"page in pages\" @click=\"selectPage(page)\">\n                            <td class=\"page--name\">\n                                {{ page.name }}\n                            </td>\n                            <td class=\"pages--route\">\n                                {{ page.route }}\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n    </div>\n    <div class=\"col-md-7\" v-show=\"showControlPanel\">\n        <div class=\"panel panel-default\">\n            <div class=\"panel-heading\">\n                Pages Control Panel\n            </div>\n            <div class=\"panel-body\">\n                <form>\n                    <div class=\"form-group\">\n                        <label for=\"name\">Navn</label>\n                        <input class=\"form-control\" id=\"name\" name=\"name\" value=\"{{ selectedPage.name }}\" placeholder=\"Et Navn til refference\">\n                    </div>\n                    <div class=\"form-group\">\n                        <label for=\"route\">Route</label>\n                        <input class=\"form-control\" id=\"route\" name=\"route\" value=\"{{ selectedPage.route }}\" placeholder=\"Route Navn\">\n                    </div>\n                    <div class=\"form-group\">\n                        <label for=\"template\">Tema / Skabelon || {{ selectedPage.template_id }}</label>\n                        <select class=\"form-control\" id=\"template\" name=\"template\">\n                            <option v-for=\"template in templates\" value=\"{{template.id}}\" v-bind:selected=\"template.id == selectedPage.template_id\">\n                                {{template.name}}\n                            </option>\n                        </select>\n                    </div>\n                    <div class=\"form-group\">\n                        <label for=\"content\">Indhold</label>\n                        <textarea class=\"form-control\" id=\"content\" name=\"content\">{{ selectedPage.content }}</textarea>\n                    </div>\n                </form>\n            </div>\n        </div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   module.hot.dispose(function () {
-    __vueify_insert__.cache["\n\n"] = false
+    __vueify_insert__.cache["\n.pages--title\n{\n    display: inline-block;\n    margin: 7px 0;\n}\n.pages--button-create {\n    margin-right: -10px;\n    border: 2px solid rgba(65, 65, 65, 0.25);\n}\n.pages--table{\n    background: white;\n}\n.page--button-edit {\n    font-size: 20px;\n    padding: 0 5px;\n}\n.pages--table-row{\n\n}\n.pages--table-row:hover{\n    cursor: pointer;\n}\n.pages--route{\n    padding: 0 15px;\n    color: grey;\n    font-weight: initial;\n}\n"] = false
     document.head.removeChild(__vueify_style__)
   })
   if (!module.hot.data) {

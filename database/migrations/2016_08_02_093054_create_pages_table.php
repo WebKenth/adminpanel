@@ -16,8 +16,7 @@ class CreatePagesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('route');
-            $table->string('slug');
-            $table->string('content');
+            $table->string('file_path');
             $table->integer('template_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();

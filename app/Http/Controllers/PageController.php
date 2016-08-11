@@ -4,10 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Page;
+use App\Template;
 use App\Http\Requests;
 
 class PageController extends Controller
 {
+    /*
+    ToDo:
+    - Fil håndtering
+        - Hver Page skal linkes til en fysisk fil
+    -
+     */
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +24,9 @@ class PageController extends Controller
      */
     public function index()
     {
-        //
+        $pages = Page::all();
+        $templates = Template::all();
+        return view('pages.index',compact('pages','templates'));
     }
 
     /**
