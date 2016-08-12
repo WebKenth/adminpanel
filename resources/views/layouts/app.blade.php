@@ -270,13 +270,13 @@
         <ul>
             <li><a href="/"><span class="fa fa-tachometer"></span>Kontrolpanel</a></li>
             <li class="section"><span class="fa fa-desktop"></span>Hjemmeside</li>
-            <li><a href="/new-page">Ny side</a></li>
-            <li><a href="#">Side oversigt</a></li>
-            <li><a href="#">Udseende</a></li>
+            {{--<li><a href="/new-page">Ny side</a></li>--}}
+            <li><a href="/pages">Side oversigt</a></li>
+            <li><a href="/templates">Udseende</a></li>
             <li><a href="#">Indstillinger</a></li>
             <li class="section"><span class="fa fa-folder-open"></span>Upload</li>
             <li><a href="/files">Filer / Billeder</a></li>
-            <li><a href="/files/restore">Gendan Filer</a></li>
+            <li><a href="/trashcan">Skraldespand</a></li>
             <li class="section"><span class="fa fa-car"></span>Biler</li>
             <li><a href="#">Bil database</a></li>
             <li><a href="#">Opret ny bil</a></li>

@@ -1,5 +1,6 @@
 <template>
 <div id="filebrowser" class="filebrowser">
+    <img v-show="loading" src="/images/ring.svg" class="filebrowser--loading">
     <div class="filebrowser--controls">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -36,7 +37,7 @@
         </div>
     </div>
     <ol class="breadcrumb">/
-        <li v-for="path in path"></li>
+        <li v-for="path in path">{{path}}</li>
     </ol>
     <div class="filebrowser--body">
         <ul class="filebrowser--list">
@@ -47,7 +48,8 @@
                 v-on:dblclick="openFolder(folder.id)"
                 v-bind:class="{ 'filebrowser--selected-item' : isSelected(folder) }"
             >
-                {{ folder.name }}
+                <i class="fa fa-folder" aria-hidden="true"></i>
+                <p>{{ folder.name }}</p>
             </li>
             <li
                 class="filebrowser--item"
@@ -55,7 +57,8 @@
                 v-on:click="selectItem(file,$event)"
                 v-bind:class="{ 'filebrowser--selected-item' : isSelected(file) }"
             >
-                {{ file.name }}
+                <img v-bind:src="file.path">
+                <p>{{ file.name }}</p>
             </li>
             <li
                 class="filebrowser--no-items"
@@ -77,6 +80,9 @@
 </div>
 </template>
 <style>
+.filebrowser{
+    position: relative;
+}
 .filebrowser--pathfinder{
     margin: -15px 0;
 }
@@ -97,19 +103,47 @@
     border-bottom: 2px solid rgb(73, 77, 77);
 }
 .filebrowser--item {
+    position: relative;
     display: inline-block;
     border: 2px solid #dddddd;
     padding: 5px;
     margin: 10px;
     width: calc(100% * (1 / 4) - 20px);
-    height: 100px;
+    height: 150px;
+    overflow: hidden;
+}
+.filebrowser--item img {
+    width: 100%;
+}
+.filebrowser--item p {
+    position: absolute;
+    z-index: 2000;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    margin: 0;
+    top: 0;
+    text-align: center;
+    padding-top: 20%;
+    opacity: 1;
+}
+.filebrowser--item p:hover{
+    opacity: 0.2;
 }
 .filebrowser--folder{
-    border: 2px solid black;
     cursor: pointer;
+    text-align: center;
 }
-.filebrowser--selected-item{
-    border: 5px solid white;
+.filebrowser--folder i{
+    font-size: 150px;
+    margin-left: 7px;
+}
+.filebrowser--folder p {
+    color: white;
+    font-size: -webkit-xxx-large;
+}
+.filebrowser--selected-item {
+    border: 5px solid #2ecc71;
 }
 .filebrowser--no-items {
     height: auto;
@@ -119,6 +153,15 @@
     margin: 50px 0;
     font-size: 25px;
 }
+.filebrowser--loading{
+    position: absolute;
+    z-index: 9000;
+    width: 100%;
+    height: calc( 100% - 143px);
+    background: rgba(73, 77, 77, 0.6);
+    margin: 142px 0 0 0;
+    border-radius: 2px;
+}
 </style>
 <script>
 export default{
@@ -127,8 +170,10 @@ export default{
     },
     data(){
         return{
+            path: [],
             files: {},
             folders: {},
+            loading: false,
             folder_name: '',
             breadcrumbs: [0],
             last_folder_id: 0,
@@ -195,6 +240,8 @@ export default{
             this.last_folder_id = this.breadcrumbs[this.breadcrumbs.length - 2];
             this.current_folder_id = folder_id;
             this.selected_items = [];
+
+            this.getPath();
             this.getFolders(folder_id);
             this.getFiles(folder_id);
         },
@@ -219,14 +266,35 @@ export default{
         },
         getFiles: function (folder_id)
         {
-            this.$http.get('/api/filebrowser/files/'+folder_id).then( function(response)
-            {
-                files = response.body;
-                this.$set('current_folder_id', folder_id);
-                return this.$set('files', JSON.parse(files));
-            }, function (response){
-                console.log(response);
-            });
+            this.$http.get('/api/filebrowser/files/'+folder_id)
+                .then( function(response)
+                {
+                    files = response.body;
+                    this.$set('current_folder_id', folder_id);
+                    return this.$set('files', JSON.parse(files));
+                }, function (response){
+                    console.log(response);
+                });
+        },
+        getPath: function()
+        {
+            var me = this;
+            this.$http
+                .get('/api/filebrowser/breadcrumbs/'+encodeURIComponent(this.breadcrumbs),
+                {
+                    before(request)
+                    {
+                        me.loading = true;
+                    }
+                })
+                .then( function(response)
+                {
+                    path = response.body;
+                    me.loading = false;
+                    return this.$set('path', JSON.parse(path));
+                }, function (response){
+                    console.log(response);
+                });
         },
         createFolder: function ()
         {
@@ -349,10 +417,13 @@ export default{
     },
     ready(){
         var me = this;
+        // Initialize view ( get folders/files/breadcrumbs )
         // get folders
         me.getFolders(0);
         // get files
         me.getFiles(0);
+        // get breadcrumbs
+        me.getPath();
 
         var Dropzone = require("dropzone");
 

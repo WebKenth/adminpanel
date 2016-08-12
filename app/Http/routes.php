@@ -20,15 +20,30 @@ Route::group(['middleware' => 'auth'], function () {
         return view('welcome');
     });
 
-    Route::get('/settings','SettingsController@index');
+    // Pages
+    Route::get('pages', 'PageController@index');
+    Route::resource('page', 'PageController');
 
-    Route::get('/user','UserController@index');
+    // Templates
+    Route::resource('template', 'TemplateController');
 
     // FileBrowser
-    Route::get('files','FileController@index');
+    Route::get('files','FileController@files');
+    Route::get('trashcan', 'FileController@trashcan');
+    Route::get('trashcan2', 'FileController@getTrashedItems');
+
+    // Settings
+    Route::get('/settings','SettingsController@index');
+
+    // User Settings
+    Route::get('/user','UserController@index');
+
+    // API Routes :: FileBrowser
     //// GET
     Route::get('api/filebrowser/files/{folder_id?}', 'FileController@getFiles');
     Route::get('api/filebrowser/folders/{parent_id?}', 'FileController@getFolders');
+    Route::get('api/filebrowser/breadcrumbs/{breadcrumbs}' , 'FileController@getBreadcrumbs');
+    Route::get('api/filebrowser/trashcan', 'FileController@getTrashedItems');
     //// POST
     Route::post('api/filebrowser/file','FileController@createFile');
     Route::post('api/filebrowser/folder','FileController@createFolder');
