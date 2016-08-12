@@ -47,7 +47,7 @@
                     Pages Control Panel
                 </div>
                 <div class="panel-body">
-                    <form>
+                    <form v-on:submit.prevent>
                         <div class="form-group">
                             <label for="name">Navn</label>
                             <input class="form-control" id="name" name="name" value="{{ selectedPage.name }}" placeholder="Et Navn til refference">
@@ -70,8 +70,15 @@
                         </div>
                         <div class="form-group">
                             <label for="content">Indhold</label>
-                            <textarea class="form-control" id="content" name="content">{{ selectedPage.content }}</textarea>
+                            <editor></editor>
                         </div>
+
+                        <button
+                            class="btn btn-success pull-right"
+                            @click="savePage"
+                        >
+                            Gem
+                        </button>
                     </form>
                 </div>
             </div>
@@ -87,6 +94,10 @@
 .pages--button-create {
     margin-right: -10px;
     border: 2px solid rgba(65, 65, 65, 0.25);
+}
+thead{
+    font-weight: bold;
+    border-bottom: 2px solid rgb(220, 220, 220);
 }
 .pages--table{
     background: white;
@@ -163,7 +174,20 @@ export default
         selectPage: function(page)
         {
             this.selectedPage = page;
+            this.$broadcast('update-editor', page.content);
             this.openControlPanel();
+        },
+        updatePagesWithSelectedPage: function(page)
+        {
+            for (var i=0; i < this.pages.length; i++)
+            {
+                console.log(i);
+                if (this.pages[i].id === page.id)
+                {
+                    console.log('lol');
+                    this.pages.$set(i,page);
+                }
+            }
         },
         openControlPanel : function()
         {
@@ -172,9 +196,27 @@ export default
                 this.showControlPanel = true;
             }
         },
+        closeControlPanel : function()
+        {
+            if(this.showControlPanel)
+            {
+                this.showControlPanel = false;
+            }
+        },
         createPage: function()
         {
-            return null;
+            // ajax to add page?
+            var page = {
+                name :  "Ny Side"
+            };
+            this.pages.push(page);
+            this.selectPage(page);
+        },
+        savePage: function()
+        {
+            console.log('updating');
+            this.updatePagesWithSelectedPage(this.selectedPage);
+            // update serverside
         }
         
     },
