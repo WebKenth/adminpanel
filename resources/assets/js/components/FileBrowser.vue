@@ -1,8 +1,8 @@
 <template>
-<div id="filebrowser" class="filebrowser">
+<div id="filebrowser" class="filebrowser ibox-title">
     <img v-show="loading" src="/images/ring.svg" class="filebrowser--loading">
     <div class="filebrowser--controls">
-        <div class="panel panel-default">
+        <div class="">
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-1">
