@@ -13,6 +13,10 @@ elixir(function(mix) {
 				'resources/assets/js/vendor/SummerNote/summernote.min.js',
 				'resources/assets/js/vendor/SummerNote/lang/summernote-da-DK.js',
 				'resources/assets/js/general.js',
+				'resources/assets/js/vendor/insp/inspinia.js',
+				'resources/assets/js/vendor/pace/pace.min.js',
+				'resources/assets/js/vendor/metisMenu/jquery.metisMenu.js',
+				'resources/assets/js/vendor/slimscroll/jquery.slimscroll.min.js',
 				'public/js/main.js'
 			],
 			'public/js/all.js',

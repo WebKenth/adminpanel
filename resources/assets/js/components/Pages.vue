@@ -50,19 +50,18 @@
                     <form v-on:submit.prevent>
                         <div class="form-group">
                             <label for="name">Navn</label>
-                            <input class="form-control" id="name" name="name" value="{{ selectedPage.name }}" placeholder="Et Navn til refference">
+                            <input class="form-control" id="name" name="name" v-model="selectedPage.name" placeholder="Et Navn til refference">
                         </div>
                         <div class="form-group">
                             <label for="route">Route</label>
-                            <input class="form-control" id="route" name="route" value="{{ selectedPage.route }}" placeholder="Route Navn">
+                            <input class="form-control" id="route" name="route" v-model="selectedPage.route" placeholder="Route Navn">
                         </div>
                         <div class="form-group">
                             <label for="template">Tema / Skabelon || {{ selectedPage.template_id }}</label>
-                            <select class="form-control" id="template" name="template">
+                            <select class="form-control" id="template" name="template" v-model="selectedPage.template_id">
                                 <option
                                     v-for="template in templates"
                                     value="{{template.id}}"
-                                    v-bind:selected="template.id == selectedPage.template_id"
                                 >
                                     {{template.name}}
                                 </option>
@@ -177,18 +176,6 @@ export default
             this.$broadcast('update-editor', page.content);
             this.openControlPanel();
         },
-        updatePagesWithSelectedPage: function(page)
-        {
-            for (var i=0; i < this.pages.length; i++)
-            {
-                console.log(i);
-                if (this.pages[i].id === page.id)
-                {
-                    console.log('lol');
-                    this.pages.$set(i,page);
-                }
-            }
-        },
         openControlPanel : function()
         {
             if(!this.showControlPanel)
@@ -214,8 +201,6 @@ export default
         },
         savePage: function()
         {
-            console.log('updating');
-            this.updatePagesWithSelectedPage(this.selectedPage);
             // update serverside
         }
         
