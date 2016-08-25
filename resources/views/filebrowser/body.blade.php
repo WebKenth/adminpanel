@@ -62,3 +62,10 @@
       </div>
     </form>
 </div>
+<script type="text/javascript">
+var options = {
+  valueNames: [ 'name', 'born' ]
+};
+
+var userList = new List('users', options);
+</script>

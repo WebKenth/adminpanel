@@ -47,22 +47,21 @@
                     Pages Control Panel
                 </div>
                 <div class="panel-body">
-                    <form>
+                    <form v-on:submit.prevent>
                         <div class="form-group">
                             <label for="name">Navn</label>
-                            <input class="form-control" id="name" name="name" value="{{ selectedPage.name }}" placeholder="Et Navn til refference">
+                            <input class="form-control" id="name" name="name" v-model="selectedPage.name" placeholder="Et Navn til refference">
                         </div>
                         <div class="form-group">
                             <label for="route">Route</label>
-                            <input class="form-control" id="route" name="route" value="{{ selectedPage.route }}" placeholder="Route Navn">
+                            <input class="form-control" id="route" name="route" v-model="selectedPage.route" placeholder="Route Navn">
                         </div>
                         <div class="form-group">
                             <label for="template">Tema / Skabelon || {{ selectedPage.template_id }}</label>
-                            <select class="form-control" id="template" name="template">
+                            <select class="form-control" id="template" name="template" v-model="selectedPage.template_id">
                                 <option
                                     v-for="template in templates"
                                     value="{{template.id}}"
-                                    v-bind:selected="template.id == selectedPage.template_id"
                                 >
                                     {{template.name}}
                                 </option>
@@ -70,8 +69,15 @@
                         </div>
                         <div class="form-group">
                             <label for="content">Indhold</label>
-                            <textarea class="form-control" id="content" name="content">{{ selectedPage.content }}</textarea>
+                            <editor></editor>
                         </div>
+
+                        <button
+                            class="btn btn-success pull-right"
+                            @click="savePage"
+                        >
+                            Gem
+                        </button>
                     </form>
                 </div>
             </div>
@@ -87,6 +93,10 @@
 .pages--button-create {
     margin-right: -10px;
     border: 2px solid rgba(65, 65, 65, 0.25);
+}
+thead{
+    font-weight: bold;
+    border-bottom: 2px solid rgb(220, 220, 220);
 }
 .pages--table{
     background: white;
@@ -163,6 +173,7 @@ export default
         selectPage: function(page)
         {
             this.selectedPage = page;
+            this.$broadcast('update-editor', page.content);
             this.openControlPanel();
         },
         openControlPanel : function()
@@ -172,9 +183,25 @@ export default
                 this.showControlPanel = true;
             }
         },
+        closeControlPanel : function()
+        {
+            if(this.showControlPanel)
+            {
+                this.showControlPanel = false;
+            }
+        },
         createPage: function()
         {
-            return null;
+            // ajax to add page?
+            var page = {
+                name :  "Ny Side"
+            };
+            this.pages.push(page);
+            this.selectPage(page);
+        },
+        savePage: function()
+        {
+            // update serverside
         }
         
     },

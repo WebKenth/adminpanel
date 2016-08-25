@@ -1,4 +1,94 @@
 <template>
+
+ <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-sm-4">
+                    <h2>Billede Upload</h2>
+
+                    <ol class="breadcrumb">/
+                         <li v-for="path in path">{{path}}</li>
+                    </ol>
+                </div>
+                <div class="col-sm-8">
+                    <div class="title-action">
+                        <a href="" class="btn btn-primary">This is action area</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-content">
+                            <div class="file-manager">
+                                <h5>Show:</h5>
+                                <a href="#" class="file-control active">Ale</a>
+                                <a href="#" class="file-control">Documents</a>
+                                <a href="#" class="file-control">Audio</a>
+                                <a href="#" class="file-control">Images</a>
+                                <div class="hr-line-dashed"></div>
+       <form action="/api/filebrowser/file" id="dropzone" class="dropzone btn btn-primary btn-block">
+                <input type="hidden" name="_token" value="{{ csrf_token }}">
+                <input type="hidden" name="folder_id" value="{{ current_folder_id }}">
+                <div class="fallback">
+                    <input name="file" type="file" multiple class="btn btn-primary btn-block" />
+                </div>
+            </form>
+                                <div class="hr-line-dashed"></div>
+                                <h5>Folders</h5>
+                                 <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Mappe Navn" v-model="folder_name">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit" @click="createFolder">Opret Mappe</button>
+                            </span>
+                        </div>
+                                <ul class="folder-list" style="padding: 0">
+                                    <li><a href=""><i class="fa fa-folder"></i> Files</a></li>
+                                    <li><a href=""><i class="fa fa-folder"></i> Pictures</a></li>
+                                    <li><a href=""><i class="fa fa-folder"></i> Web pages</a></li>
+                                    <li><a href=""><i class="fa fa-folder"></i> Illustrations</a></li>
+                                    <li><a href=""><i class="fa fa-folder"></i> Films</a></li>
+                                    <li><a href=""><i class="fa fa-folder"></i> Books</a></li>
+                                </ul>
+                                <h5 class="tag-title">Search file</h5>
+                            <div class="input-group" id="users3">
+                                <input type="text" placeholder="Søg element " class="search input form-control">
+                                <span class="input-group-btn ">
+                                        <button type="button" class="btn btn btn-primary"> <i class="fa fa-search"  class="sort" data-sort="name"></i> Go!</button>
+                                </span>
+                            </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 animated fadeInRight">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="file-box" class="file-box filebrowser--item name"
+                                v-for="file in files"
+                                v-on:click="selectItem(file,$event)"
+                                v-bind:class="{ 'filebrowser--selected-item' : isSelected(file) }">
+                                <div class="file list2">
+                                    <a href="#">
+                                        <span class="corner"></span>
+
+                                        <div class="image">
+                                            <img v-bind:src="file.path">
+                                        </div>
+                                        <div class="file-name name">
+                                            {{ file.name }}
+                                            <br>
+                                            <small class="born">Added: Jan 6, 2014</small>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+
 <div id="filebrowser" class="filebrowser ibox-title">
     <img v-show="loading" src="/images/ring.svg" class="filebrowser--loading">
     <div class="filebrowser--controls">
@@ -67,17 +157,18 @@
                 Tom Mappe
             </li>
         </ul>
-        <div class="filebrowser--dropzone">
-            <form action="/api/filebrowser/file" id="dropzone" class="dropzone">
+        <div class="btn btn-primary btn-block ">
+            <form action="/api/filebrowser/file" id="dropzone" class="dropzone btn btn-primary btn-block">
                 <input type="hidden" name="_token" value="{{ csrf_token }}">
                 <input type="hidden" name="folder_id" value="{{ current_folder_id }}">
                 <div class="fallback">
-                    <input name="file" type="file" multiple />
+                    <input name="file" type="file" multiple class="btn btn-primary btn-block" />
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 </template>
 <style>
 .filebrowser{
@@ -98,9 +189,9 @@
     background-color: whitesmoke;
 }
 .dropzone{
-    border: 1px solid whitesmoke;
-    border-radius: 2px;
-    border-bottom: 2px solid rgb(73, 77, 77);
+        background-color: #1ab394;
+    border-color: #1ab394;
+    color: #FFFFFF;
 }
 .filebrowser--item {
     position: relative;
@@ -163,6 +254,15 @@
     border-radius: 2px;
 }
 </style>
+<script src="/js/all.js"></script>
+<script src="http://listjs.com/no-cdn/list.js"></script>
+<script type="text/javascript">
+var options = {
+  valueNames: [ 'name', 'born' ]
+};
+
+var userList = new List('users', options);
+</script>
 <script>
 export default{
     props:{

@@ -17,6 +17,7 @@ elixir(function(mix) {
 				'resources/assets/js/vendor/pace/pace.min.js',
 				'resources/assets/js/vendor/metisMenu/jquery.metisMenu.js',
 				'resources/assets/js/vendor/slimscroll/jquery.slimscroll.min.js',
+				'resources/assets/js/vendor/list/list.min.js',
 				'public/js/main.js'
 			],
 			'public/js/all.js',

@@ -38,6 +38,19 @@ Route::group(['middleware' => 'auth'], function () {
     // User Settings
     Route::get('/user','UserController@index');
 
+    // UI elements
+    Route::get('/elements', function(){
+        return view('uielements/elements');
+    });
+
+    // App Store
+    Route::get('/store', function(){
+        return view('store/store');
+    });
+    Route::get('/product', function(){
+        return view('store/product');
+    });
+
     // API Routes :: FileBrowser
     //// GET
     Route::get('api/filebrowser/files/{folder_id?}', 'FileController@getFiles');

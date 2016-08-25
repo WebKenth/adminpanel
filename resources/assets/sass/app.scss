@@ -2,12 +2,16 @@
 @import "node_modules/dropzone/dist/dropzone";
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "node_modules/sweetalert/dist/sweetalert";
-@import "inspinia.scss";
+@import "vendor/inspinia.scss";
+@import "ace.scss";
 @import "main.scss";
+@import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css";
 
 .navbar-static-side {
 }
-
+body{
+  font-size: 14px;
+}
 
 
 // body{

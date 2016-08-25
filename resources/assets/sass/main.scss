@@ -7,7 +7,7 @@ body {
 }
 
 .nav-header {
-
+ background: none;
 }
 
 .nav-label {
@@ -26,3 +26,62 @@ body {
 .nav > li > a {
 	padding-bottom: 3px;
 }
+
+
+
+.navbar-static-side {
+    position: fixed;
+    width: 220px;
+    z-index: 2001;
+    height: 100%;
+}
+
+
+#page-wrapper {
+    position: inherit;
+    margin: 0 0 0 220px;
+    height: auto;
+}
+
+.tab-content {
+	border: 0px solid black !important;
+}
+
+.wrapper-content {
+	padding: 0px;
+}
+
+.page-heading {
+	margin-bottom: 20px;
+}
+
+.file-name {
+	 overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 12; /* number of lines to show */
+}
+
+.dropzone {
+	min-height: 1px;
+}
+
+.dropzone .dz-message {
+	margin: 0px;
+}
+
+.menu--icon {
+	width: 20px;
+    margin-top: -2px;
+    margin-right: 4px;
+}
+
+.product-imitation {
+	padding: 0px;
+	img {
+	max-width: 100%;
+    max-height: 100%;
+}
+}
+

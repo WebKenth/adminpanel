@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/css/summernote.css">
     <link rel="stylesheet" href="/css/app.css">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="http://s.mlcdn.co/animate.css">
+    <link srl="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.css">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
 </head>
@@ -20,10 +20,9 @@
             <div class="sidebar-collapse">
                 <ul class="nav metismenu" id="side-menu">
                     <li class="nav-header">
-                   
                         <div class="dropdown profile-element"> <span>
-                            
-                             </span>
+                            <img alt="image" class="img-circle" src="http://webapplayers.com/inspinia_admin-v2.5/img/profile_small.jpg">
+                        </span>
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">{{ auth()->user()->name }}</strong>
                              </span> <span class="text-muted text-xs block">Indstillinger <b class="caret"></b></span> </span> </a>
@@ -35,53 +34,47 @@
                                 <li><a href="login.html">Logout</a></li>
                             </ul>
                         </div>
-                        <div class="logo-element">
-                            IN+
-                        </div>
                     </li>
-
-
-
-
                     <li>
-                        <a href="grid_options.html"><i class="fa fa-tachometer nav--ikon-farve"></i> <span class="nav-label">Kontrolpanel</span></a>
+                        <a href="grid_options.html"><img src="http://image.flaticon.com/icons/svg/186/186233.svg" class="menu--icon"><!-- <i class="fa fa-tachometer nav--ikon-farve"></i> --> <span class="nav-label">Kontrolpanel</span></a>
                     </li>
                     <li class="active">
                         <a href="#"><i class="fa fa-desktop nav--ikon-farve"></i> <span class="nav-label">Hjemmeside </span></a>
                         <ul class="nav nav-second-level">
-                            <li><a href="#">Ny side</a></li>
-                            <li>
-                                <a href="#">Udseende</a></li>
-                            <li>
-                                <a href="#">indstillinger</a></li>
+                            <li><a href="/pages">Side Oversigt</a></li>
+                            <li><a href="/templates">Udseende</a></li>
+                            <li><a href="#">indstillinger</a></li>
                         </ul>
                     </li>
                     <li class="active">
                         <a href="#"><i class="fa fa-folder-open nav--ikon-farve"></i> <span class="nav-label">Upload </span></a>
                         <ul class="nav nav-second-level">
                             <li><a href="/files">Filer / Billeder</a></li>
-                            <li>
-                                <a href="/files">Gendan</a></li>
+                            <li><a href="/trashcan">Gendan</a></li>
                         </ul>
                     </li>
                     <li class="active">
                         <a href="#"><i class="fa fa-car nav--ikon-farve"></i> <span class="nav-label">Biler </span></a>
                         <ul class="nav nav-second-level">
                             <li><a href="#">Bil database</a></li>
-                            <li>
-                                <a href="#">Opret ny bil</a></li>
-                            <li>
-                                <a href="#">Henvendelser <span class="label label-info pull-right">12</span></a></li>
+                            <li><a href="#">Opret ny bil</a></li>
+                            <li><a href="#">Henvendelser <span class="label label-info pull-right">12</span></a></li>
                         </ul>
                     </li>
                     <li class="active">
                         <a href="#"><i class="fa fa-building nav--ikon-farve"></i> <span class="nav-label">Virksomhed </span></a>
                         <ul class="nav nav-second-level">
                             <li><a href="#">Kontakt information</a></li>
-                            <li>
-                                <a href="#">Ansatte</a></li>
+                            <li><a href="#">Ansatte</a></li>
                         </ul>
                     </li>
+                    <li>
+                         <a href="/elements"><i class="fa fa-tachometer nav--ikon-farve"></i> <span class="nav-label">elements</span></a>
+                    </li>
+                    <li>
+                         <a href="/store"><i class="fa fa-tachometer nav--ikon-farve"></i> <span class="nav-label">store</span></a>
+                    </li>
+                   
                 </ul>
 
             </div>
@@ -109,7 +102,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a href="profile.html" class="pull-left">
-                                    <img alt="image" class="img-circle" src="img/a7.jpg">
+                                    <img alt="image" class="img-circle" src="">
                                 </a>
                                 <div class="media-body">
                                     <small class="pull-right">46h ago</small>
@@ -122,7 +115,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a href="profile.html" class="pull-left">
-                                    <img alt="image" class="img-circle" src="img/a4.jpg">
+                                    <img alt="image" class="img-circle" src="">
                                 </a>
                                 <div class="media-body ">
                                     <small class="pull-right text-navy">5h ago</small>
@@ -135,7 +128,7 @@
                         <li>
                             <div class="dropdown-messages-box">
                                 <a href="profile.html" class="pull-left">
-                                    <img alt="image" class="img-circle" src="img/profile.jpg">
+                                    <img alt="image" class="img-circle" src="">
                                 </a>
                                 <div class="media-body ">
                                     <small class="pull-right">23h ago</small>
@@ -207,29 +200,12 @@
 
         </nav>
         </div>
-            <div class="row wrapper border-bottom white-bg page-heading">
-                <div class="col-sm-4">
-                    <h2>This is main title</h2>
-                    <ol class="breadcrumb">
-                        <li>
-                            <a href="index.html">This is</a>
-                        </li>
-                        <li class="active">
-                            <strong>Breadcrumb</strong>
-                        </li>
-                    </ol>
-                </div>
-                <div class="col-sm-8">
-                    <div class="title-action">
-                        <a href="" class="btn btn-primary">This is action area</a>
-                    </div>
-                </div>
-            </div>
+           
 
             <div class="wrapper wrapper-content">
                 @yield('content')
             </div>
-            <div class="footer">
+            <div class="footer fixed">
                 <div class="pull-right">
                     10GB of <strong>250GB</strong> Free.
                 </div>
@@ -312,4 +288,20 @@
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body> -->
 <script src="/js/all.js"></script>
+<script type="text/javascript">
+var options = {
+  valueNames: [ 'name', 'born' ]
+};
+
+var userList = new List('users2', options);
+
+</script>
+<script type="text/javascript">
+var options = {
+  valueNames: [ 'name', 'born' ]
+};
+
+var userList = new List2('users3', options);
+
+</script>
 </html>
